@@ -304,6 +304,149 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/05/tsconfig-json-配置详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="feng shuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="跟着流年去旅行的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/08/05/tsconfig-json-配置详解/" itemprop="url">tsconfig.json 配置详解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-05T21:48:05+08:00">
+                2019-08-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程语言/" itemprop="url" rel="index">
+                    <span itemprop="name">编程语言</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>因为工作中用到了 typescript，抽时间，先大致介绍一下 tsconfig 配置文件，完整的 ts 学习还是建议从官方教程出发，玩儿的愉快</p>
+<h2 id="tsconfig-json-配置"><a href="#tsconfig-json-配置" class="headerlink" title="tsconfig.json 配置"></a>tsconfig.json 配置</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"compilerOptions"</span>: &#123;</span><br><span class="line">    <span class="comment">/* Basic Options */</span></span><br><span class="line">    <span class="string">"target"</span>: <span class="string">"es5"</span> <span class="comment">/* target用于指定编译之后的版本目标: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019' or 'ESNEXT'. */</span>,</span><br><span class="line">    <span class="string">"module"</span>: <span class="string">"commonjs"</span> <span class="comment">/* 用来指定要使用的模块标准: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */</span>,</span><br><span class="line">    <span class="string">"lib"</span>: [<span class="string">"es6"</span>, <span class="string">"dom"</span>] <span class="comment">/* lib用于指定要包含在编译中的库文件 */</span>,</span><br><span class="line">    <span class="string">"allowJs"</span>: <span class="literal">true</span>,                       <span class="comment">/* allowJs设置的值为true或false，用来指定是否允许编译js文件，默认是false，即不编译js文件 */</span></span><br><span class="line">    <span class="string">"checkJs"</span>: <span class="literal">true</span>,                       <span class="comment">/* checkJs的值为true或false，用来指定是否检查和报告js文件中的错误，默认是false */</span></span><br><span class="line">    <span class="string">"jsx"</span>: <span class="string">"preserve"</span>,                     <span class="comment">/* 指定jsx代码用于的开发环境: 'preserve', 'react-native', or 'react'. */</span></span><br><span class="line">    <span class="string">"declaration"</span>: <span class="literal">true</span>,                   <span class="comment">/* declaration的值为true或false，用来指定是否在编译的时候生成相应的".d.ts"声明文件。如果设为true，编译每个ts文件之后会生成一个js文件和一个声明文件。但是declaration和allowJs不能同时设为true */</span></span><br><span class="line">    <span class="string">"declarationMap"</span>: <span class="literal">true</span>,                <span class="comment">/* 值为true或false，指定是否为声明文件.d.ts生成map文件 */</span></span><br><span class="line">    <span class="string">"sourceMap"</span>: <span class="literal">true</span>,                     <span class="comment">/* sourceMap的值为true或false，用来指定编译时是否生成.map文件 */</span></span><br><span class="line">    <span class="string">"outFile"</span>: <span class="string">"./"</span>,                       <span class="comment">/* outFile用于指定将输出文件合并为一个文件，它的值为一个文件路径名。比如设置为"./dist/main.js"，则输出的文件为一个main.js文件。但是要注意，只有设置module的值为amd和system模块时才支持这个配置 */</span></span><br><span class="line">    <span class="string">"outDir"</span>: <span class="string">"./"</span>,                        <span class="comment">/* outDir用来指定输出文件夹，值为一个文件夹路径字符串，输出的文件都将放置在这个文件夹 */</span></span><br><span class="line">    <span class="string">"rootDir"</span>: <span class="string">"./"</span>,                       <span class="comment">/* 用来指定编译文件的根目录，编译器会在根目录查找入口文件，如果编译器发现以rootDir的值作为根目录查找入口文件并不会把所有文件加载进去的话会报错，但是不会停止编译 */</span></span><br><span class="line">    <span class="string">"composite"</span>: <span class="literal">true</span>,                     <span class="comment">/* 是否编译构建引用项目  */</span></span><br><span class="line">    <span class="string">"incremental"</span>: <span class="literal">true</span>,                   <span class="comment">/* Enable incremental compilation */</span></span><br><span class="line">    <span class="string">"tsBuildInfoFile"</span>: <span class="string">"./"</span>,               <span class="comment">/* Specify file to store incremental compilation information */</span></span><br><span class="line">    <span class="string">"removeComments"</span>: <span class="literal">true</span>,                <span class="comment">/* removeComments的值为true或false，用于指定是否将编译后的文件中的注释删掉，设为true的话即删掉注释，默认为false */</span></span><br><span class="line">    <span class="string">"noEmit"</span>: <span class="literal">true</span>,                        <span class="comment">/* 不生成编译文件，这个一般比较少用 */</span></span><br><span class="line">    <span class="string">"importHelpers"</span>: <span class="literal">true</span>,                 <span class="comment">/* importHelpers的值为true或false，指定是否引入tslib里的辅助工具函数，默认为false */</span></span><br><span class="line">    <span class="string">"downlevelIteration"</span>: <span class="literal">true</span>,            <span class="comment">/* 当target为'ES5' or 'ES3'时，为'for-of', spread, and destructuring'中的迭代器提供完全支持 */</span></span><br><span class="line">    <span class="string">"isolatedModules"</span>: <span class="literal">true</span>,               <span class="comment">/* isolatedModules的值为true或false，指定是否将每个文件作为单独的模块，默认为true，它不可以和declaration同时设定 */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Strict Type-Checking Options */</span></span><br><span class="line">    <span class="string">"strict"</span>: <span class="literal">true</span> <span class="comment">/* strict的值为true或false，用于指定是否启动所有类型检查，如果设为true则会同时开启下面这几个严格类型检查，默认为false */</span>,</span><br><span class="line">    <span class="string">"noImplicitAny"</span>: <span class="literal">true</span>,                 <span class="comment">/* noImplicitAny的值为true或false，如果我们没有为一些值设置明确的类型，编译器会默认认为这个值为any，如果noImplicitAny的值为true的话。则没有明确的类型会报错。默认值为false */</span></span><br><span class="line">    <span class="string">"strictNullChecks"</span>: <span class="literal">true</span>,              <span class="comment">/* strictNullChecks为true时，null和undefined值不能赋给非这两种类型的值，别的类型也不能赋给他们，除了any类型。还有个例外就是undefined可以赋值给void类型 */</span></span><br><span class="line">    <span class="string">"strictFunctionTypes"</span>: <span class="literal">true</span>,           <span class="comment">/* strictFunctionTypes的值为true或false，用于指定是否使用函数参数双向协变检查 */</span></span><br><span class="line">    <span class="string">"strictBindCallApply"</span>: <span class="literal">true</span>,           <span class="comment">/* 设为true后会对bind、call和apply绑定的方法的参数的检测是严格检测的 */</span></span><br><span class="line">    <span class="string">"strictPropertyInitialization"</span>: <span class="literal">true</span>,  <span class="comment">/* 设为true后会检查类的非undefined属性是否已经在构造函数里初始化，如果要开启这项，需要同时开启strictNullChecks，默认为false */</span></span><br><span class="line">   <span class="string">"noImplicitThis"</span>: <span class="literal">true</span>,                <span class="comment">/* 当this表达式的值为any类型的时候，生成一个错误 */</span></span><br><span class="line">    <span class="string">"alwaysStrict"</span>: <span class="literal">true</span>,                  <span class="comment">/* alwaysStrict的值为true或false，指定始终以严格模式检查每个模块，并且在编译之后的js文件中加入"use strict"字符串，用来告诉浏览器该js为严格模式 */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Additional Checks */</span></span><br><span class="line">    <span class="string">"noUnusedLocals"</span>: <span class="literal">true</span>,                <span class="comment">/* 用于检查是否有定义了但是没有使用的变量，对于这一点的检测，使用eslint可以在你书写代码的时候做提示，你可以配合使用。它的默认值为false */</span></span><br><span class="line">    <span class="string">"noUnusedParameters"</span>: <span class="literal">true</span>,            <span class="comment">/* 用于检查是否有在函数体中没有使用的参数，这个也可以配合eslint来做检查，默认为false */</span></span><br><span class="line">    <span class="string">"noImplicitReturns"</span>: <span class="literal">true</span>,             <span class="comment">/* 用于检查函数是否有返回值，设为true后，如果函数没有返回值则会提示，默认为false */</span></span><br><span class="line">    <span class="string">"noFallthroughCasesInSwitch"</span>: <span class="literal">true</span>,    <span class="comment">/* 用于检查switch中是否有case没有使用break跳出switch，默认为false */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Module Resolution Options */</span></span><br><span class="line">    <span class="string">"moduleResolution"</span>: <span class="string">"node"</span>,            <span class="comment">/* 用于选择模块解析策略，有'node'和'classic'两种类型' */</span></span><br><span class="line">    <span class="string">"baseUrl"</span>: <span class="string">"./"</span>,                       <span class="comment">/* baseUrl用于设置解析非相对模块名称的基本目录，相对模块不会受baseUrl的影响 */</span></span><br><span class="line">    <span class="string">"paths"</span>: &#123;&#125;,                           <span class="comment">/* 用于设置模块名称到基于baseUrl的路径映射 */</span></span><br><span class="line">    <span class="string">"rootDirs"</span>: [],                        <span class="comment">/* rootDirs可以指定一个路径列表，在构建时编译器会将这个路径列表中的路径的内容都放到一个文件夹中 */</span></span><br><span class="line">    <span class="string">"typeRoots"</span>: [],                       <span class="comment">/* typeRoots用来指定声明文件或文件夹的路径列表，如果指定了此项，则只有在这里列出的声明文件才会被加载 */</span></span><br><span class="line">    <span class="string">"types"</span>: [],                           <span class="comment">/* types用来指定需要包含的模块，只有在这里列出的模块的声明文件才会被加载进来 */</span></span><br><span class="line">    <span class="string">"allowSyntheticDefaultImports"</span>: <span class="literal">true</span>,  <span class="comment">/* 用来指定允许从没有默认导出的模块中默认导入 */</span></span><br><span class="line">    <span class="string">"esModuleInterop"</span>: <span class="literal">true</span> <span class="comment">/* 通过为导入内容创建命名空间，实现CommonJS和ES模块之间的互操作性 */</span>,</span><br><span class="line">    <span class="string">"preserveSymlinks"</span>: <span class="literal">true</span>,              <span class="comment">/* 不把符号链接解析为其真实路径，具体可以了解下webpack和nodejs的symlink相关知识 */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Source Map Options */</span></span><br><span class="line">    <span class="string">"sourceRoot"</span>: <span class="string">""</span>,                      <span class="comment">/* sourceRoot用于指定调试器应该找到TypeScript文件而不是源文件位置，这个值会被写进.map文件里 */</span></span><br><span class="line">    <span class="string">"mapRoot"</span>: <span class="string">""</span>,                         <span class="comment">/* mapRoot用于指定调试器找到映射文件而非生成文件的位置，指定map文件的根路径，该选项会影响.map文件中的sources属性 */</span></span><br><span class="line">    <span class="string">"inlineSourceMap"</span>: <span class="literal">true</span>,               <span class="comment">/* 指定是否将map文件的内容和js文件编译在同一个js文件中，如果设为true，则map的内容会以//# sourceMappingURL=然后拼接base64字符串的形式插入在js文件底部 */</span></span><br><span class="line">    <span class="string">"inlineSources"</span>: <span class="literal">true</span>,                 <span class="comment">/* 用于指定是否进一步将.ts文件的内容也包含到输入文件中 */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Experimental Options */</span></span><br><span class="line">    <span class="string">"experimentalDecorators"</span>: <span class="literal">true</span> <span class="comment">/* 用于指定是否启用实验性的装饰器特性 */</span></span><br><span class="line">    <span class="string">"emitDecoratorMetadata"</span>: <span class="literal">true</span>,         <span class="comment">/* 用于指定是否为装饰器提供元数据支持，关于元数据，也是ES6的新标准，可以通过Reflect提供的静态方法获取元数据，如果需要使用Reflect的一些方法，需要引入ES2015.Reflect这个库 */</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="string">"files"</span>: [], <span class="comment">// files可以配置一个数组列表，里面包含指定文件的相对或绝对路径，编译器在编译的时候只会编译包含在files中列出的文件，如果不指定，则取决于有没有设置include选项，如果没有include选项，则默认会编译根目录以及所有子目录中的文件。这里列出的路径必须是指定文件，而不是某个文件夹，而且不能使用* ? **/ 等通配符</span></span><br><span class="line">  <span class="string">"include"</span>: [],  <span class="comment">// include也可以指定要编译的路径列表，但是和files的区别在于，这里的路径可以是文件夹，也可以是文件，可以使用相对和绝对路径，而且可以使用通配符，比如"./src"即表示要编译src文件夹下的所有文件以及子文件夹的文件</span></span><br><span class="line">  <span class="string">"exclude"</span>: [],  <span class="comment">// exclude表示要排除的、不编译的文件，它也可以指定一个列表，规则和include一样，可以是文件或文件夹，可以是相对路径或绝对路径，可以使用通配符</span></span><br><span class="line">  <span class="string">"extends"</span>: <span class="string">""</span>,   <span class="comment">// extends可以通过指定一个其他的tsconfig.json文件路径，来继承这个配置文件里的配置，继承来的文件的配置会覆盖当前文件定义的配置。TS在3.2版本开始，支持继承一个来自Node.js包的tsconfig.json配置文件</span></span><br><span class="line">  <span class="string">"compileOnSave"</span>: <span class="literal">true</span>,  <span class="comment">// compileOnSave的值是true或false，如果设为true，在我们编辑了项目中的文件保存的时候，编辑器会根据tsconfig.json中的配置重新生成文件，不过这个要编辑器支持</span></span><br><span class="line">  <span class="string">"references"</span>: [],  <span class="comment">// 一个对象数组，指定要引用的项目</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/05/webpack4打造极致开发环境/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -907,7 +1050,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -918,7 +1061,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -929,7 +1072,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -998,7 +1141,7 @@
 -->
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共7k字</span>
+  <span class="post-count">博客全站共9.1k字</span>
 </div>
 
         
