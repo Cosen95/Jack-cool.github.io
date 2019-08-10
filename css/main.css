@@ -1682,16 +1682,6 @@ pre .javascript .function {
   display: inline-block;
   margin: 0.8em 2em 0 2em;
 }
-#wechat:hover p {
-  animation: roll 0.1s infinite linear;
-  -webkit-animation: roll 0.1s infinite linear;
-  -moz-animation: roll 0.1s infinite linear;
-}
-#alipay:hover p {
-  animation: roll 0.1s infinite linear;
-  -webkit-animation: roll 0.1s infinite linear;
-  -moz-animation: roll 0.1s infinite linear;
-}
 #bitcoin:hover p {
   animation: roll 0.1s infinite linear;
   -webkit-animation: roll 0.1s infinite linear;
@@ -1952,7 +1942,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #01ff94;
+  background: #616e93;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2812,4 +2802,7 @@ pre {
   padding: 25px;
   -webkit-box-shadow: 0 0 5px rgba(202,203,203,0.5);
   -moz-box-shadow: 0 0 5px rgba(202,203,204,0.5);
+}
+* {
+  cursor: url("/images/鼠标.png"), auto !important;
 }
