@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://jack-cool.github.io/2019/08/24/Hooks%E4%B8%8EReact%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%9A%84%E5%85%B3%E7%B3%BB/</loc>
+    
+    <lastmod>2019-08-24T03:44:46.354Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://jack-cool.github.io/2019/08/05/webpack4%E6%89%93%E9%80%A0%E6%9E%81%E8%87%B4%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</loc>
     
     <lastmod>2019-08-11T13:33:17.447Z</lastmod>
