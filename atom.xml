@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://jack-cool.github.io/"/>
-  <updated>2019-08-24T03:44:46.354Z</updated>
+  <updated>2019-08-27T13:25:16.078Z</updated>
   <id>https://jack-cool.github.io/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>前端应该晓得的web登录</title>
+    <link href="https://jack-cool.github.io/2019/08/27/%E5%89%8D%E7%AB%AF%E5%BA%94%E8%AF%A5%E6%99%93%E5%BE%97%E7%9A%84web%E7%99%BB%E5%BD%95/"/>
+    <id>https://jack-cool.github.io/2019/08/27/前端应该晓得的web登录/</id>
+    <published>2019-08-27T13:22:16.000Z</published>
+    <updated>2019-08-27T13:25:16.078Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前端应该知道的-web-登录"><a href="#前端应该知道的-web-登录" class="headerlink" title="前端应该知道的 web 登录"></a>前端应该知道的 web 登录</h2><h3 id="为什么会有登录这回事"><a href="#为什么会有登录这回事" class="headerlink" title="为什么会有登录这回事"></a>为什么会有登录这回事</h3><p>首先这是因为 HTTP 是无状态的协议。所谓无状态就是在两次请求之间服务器不会保存任何的数据。所以，登录就是用某种方法让服务器在多次请求之间能够识别出你，而不是每次发请求都得带上用户名密码这样的识别身份的信息。从登录成功到登出的这个过程，服务器一直维护了一个可以识别出用户信息的数据结构，广义上来说，这个过程就叫做 session，也就是保持了一个会话</p><h3 id="常见的两种登录"><a href="#常见的两种登录" class="headerlink" title="常见的两种登录"></a>常见的两种登录</h3><h4 id="服务器-session-客户端-sessionId"><a href="#服务器-session-客户端-sessionId" class="headerlink" title="服务器 session + 客户端 sessionId"></a>服务器 session + 客户端 sessionId</h4><!-- 图片 --><p><img src="/images/session.png" alt="alt"></p><ul><li>客户端带着用户名和密码去访问/login 接口，服务器端收到后校验用户名和密码，校验正确就会在服务器端存储一个 sessionId 和 session 的映射关系。</li><li>服务器端返回 response，并且将 sessionId 以 set-cookie 的方式种在客户端，这样，sessionId 就存在了客户端。这里要注意的是，将 sessionId 存在 cookie 并不是一种强制的方法，而是大家一般都这么做，而且发请求的时候符合 domain 和 path 的时候，会自动带上 cookie，省去了手动塞的过程。</li><li>客户端发起非登录请求时，假如服务器给了 set-cookie，浏览器会自动在请求头中添加 cookie</li><li>服务器接收请求，分解 cookie，验证信息，核对成功后返回 response 给客户端</li></ul><h4 id="token"><a href="#token" class="headerlink" title="token"></a>token</h4><blockquote><p>前面说到 sessionId 方式的本质是把用户信息维护在 serve 端，token 方式就是把用户的状态信息加密成一串 token 传给前端，然后每次发请求时把 token 带上，传回给服务端。服务端收到请求之后，解析 token 并且验证相关信息</p></blockquote><p>token 也称作令牌，由 uid+time+sign+固定参数。</p><p>token 的认证方式类似于临时的证书签名，并且是一种服务端无状态的认证方式，非常适合于 REST API 的场景。所谓无状态就是服务端并不会保存身份认证相关的数据。</p><p>组成:</p><ul><li>uid: 用户唯一身份标识</li><li>time: 当前时间的时间戳</li><li>sign: 签名，使用 hash/encrypt 压缩成定长的十六进制字符串，以防止第三方恶意拼接</li><li>固定参数（可选）: 将一些常用的固定参数加入到 token 中是为了避免重复查库</li></ul><p>认证流程:</p><ul><li>用户登录，成功后服务器返回 Token 给客户端</li><li>客户端收到数据后保存在客户端</li><li>客户端再次访问服务器，将 token 放入 headers 中</li><li>服务器端采用 filter 过滤器校验。检验成功后则返回请求数据，校验失败则返回错误码</li></ul><p>业界通用的加密方式是<code>jwt（json web token）</code></p><h5 id="JWT"><a href="#JWT" class="headerlink" title="JWT"></a>JWT</h5><p>JWT 的原理是，服务器认证以后，生成一个 JSON 对象，发回给用户，就像下面这样:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;姓名&quot;: &quot;张三&quot;,</span><br><span class="line">  &quot;角色&quot;: &quot;管理员&quot;,</span><br><span class="line">  &quot;到期时间&quot;: &quot;2019年8月27日0点0分&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>以后，用户与服务端通信的时候，都要发回这个 JSON 对象。服务器完全只靠这个对象认证用户身份。为了防止用户篡改数据，服务器在生成这个对象的时候，会加上签名。</p><p>服务器就不保存任何 session 数据了，也就是说，服务器变成无状态了，从而比较容易实现扩展。</p><p>JWT 的格式大致如下:</p><!-- 图片 --><p>它是一个很长的字符串，中间用点（.）分隔成三个部分。</p><p>JWT 的三个部分依次如下:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Header(头部)</span><br><span class="line">Payload(负载)</span><br><span class="line">Signature(签名)</span><br></pre></td></tr></table></figure><p>下面简单介绍一下这三部分:</p><ul><li>Header</li></ul><p>Header 部分是一个 JSON 对象，描述 JWT 的元数据。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;alg&quot;: &quot;HS256&quot;,</span><br><span class="line">  &quot;typ&quot;: &quot;JWT&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>上面代码中，<code>alg</code>属性表示签名的算法，默认是 HMAC SHA256（写成 HS256）；<code>typ</code>属性表示这个令牌（token）的类型（type），JWT 令牌统一写为<code>JWT</code>。</p><p>最后，将上面的 JSON 对象使用<code>Base64URL</code>算法转成字符串。</p><ul><li>Payload</li></ul><p>Payload 部分也是一个 JSON 对象，里面放的是用户的信息，用来存放实际需要传递的数据。JWT 规定了 7 个官方字段，供选用。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">iss (issuer)：签发人</span><br><span class="line">exp (expiration time)：过期时间</span><br><span class="line">sub (subject)：主题</span><br><span class="line">aud (audience)：受众</span><br><span class="line">nbf (Not Before)：生效时间</span><br><span class="line">iat (Issued At)：签发时间</span><br><span class="line">jti (JWT ID)：编号</span><br></pre></td></tr></table></figure><p>注意，JWT 默认是不加密的，任何人都可以读到，所以不要把秘密信息放在这个部分。</p><p>这个 JSON 对象也要使用<code>Base64URL</code>算法转成字符串。</p><ul><li>Signature</li></ul><p>Signature 部分是对前两部分的签名，防止数据篡改。</p><p>首先，需要指定一个密钥（secret）。这个密钥只有服务器才知道，不能泄露给用户。然后，使用 Header 里面指定的签名算法（默认是 HMAC SHA256），按照下面的公式产生签名。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HMACSHA256(</span><br><span class="line">  base64UrlEncode(header) + &quot;.&quot; +</span><br><span class="line">  base64UrlEncode(payload),</span><br><span class="line">  secret)</span><br></pre></td></tr></table></figure><p>算出签名以后，把 Header、Payload、Signature 三个部分拼成一个字符串，每个部分之间用”点”（.）分隔，就可以返回给用户。即最终的 jwt 为：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jwt = base64url(header) + &quot;.&quot; + base64url(payload) + &quot;.&quot; + signature</span><br></pre></td></tr></table></figure><!-- 图片 --><p>jwt 可以放在 response 中返回，也可以放在 cookie 中返回，这都是具体的返回方式，并不重要。<br>客户端发起请求时，官方推荐放在 HTTP header 中：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Authorization: Bearer &lt;token&gt;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;前端应该知道的-web-登录&quot;&gt;&lt;a href=&quot;#前端应该知道的-web-登录&quot; class=&quot;headerlink&quot; title=&quot;前端应该知道的 web 登录&quot;&gt;&lt;/a&gt;前端应该知道的 web 登录&lt;/h2&gt;&lt;h3 id=&quot;为什么会有登录这回事&quot;&gt;&lt;a hr
+      
+    
+    </summary>
+    
+      <category term="前端技术" scheme="https://jack-cool.github.io/categories/%E5%89%8D%E7%AB%AF%E6%8A%80%E6%9C%AF/"/>
+    
+    
+      <category term="session" scheme="https://jack-cool.github.io/tags/session/"/>
+    
+      <category term="cookie" scheme="https://jack-cool.github.io/tags/cookie/"/>
+    
+      <category term="JWT" scheme="https://jack-cool.github.io/tags/JWT/"/>
+    
+  </entry>
   
   <entry>
     <title>Hooks与React生命周期的关系</title>
