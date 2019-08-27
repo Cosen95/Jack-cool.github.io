@@ -90,19 +90,21 @@
 
 
 
-<meta name="description" content="前端应该知道的 web 登录为什么会有登录这回事首先这是因为 HTTP 是无状态的协议。所谓无状态就是在两次请求之间服务器不会保存任何的数据。所以，登录就是用某种方法让服务器在多次请求之间能够识别出你，而不是每次发请求都得带上用户名密码这样的识别身份的信息。从登录成功到登出的这个过程，服务器一直维护了一个可以识别出用户信息的数据结构，广义上来说，这个过程就叫做 session，也就是保持了一个会话">
+<meta name="description" content="为什么会有登录这回事首先这是因为 HTTP 是无状态的协议。所谓无状态就是在两次请求之间服务器不会保存任何的数据。所以，登录就是用某种方法让服务器在多次请求之间能够识别出你，而不是每次发请求都得带上用户名密码这样的识别身份的信息。从登录成功到登出的这个过程，服务器一直维护了一个可以识别出用户信息的数据结构，广义上来说，这个过程就叫做 session，也就是保持了一个会话。 常见的两种登录服务器 s">
 <meta name="keywords" content="session,cookie,JWT">
 <meta property="og:type" content="article">
 <meta property="og:title" content="前端应该晓得的web登录">
 <meta property="og:url" content="https://jack-cool.github.io/2019/08/27/前端应该晓得的web登录/index.html">
 <meta property="og:site_name" content="跟着流年去旅行的个人博客">
-<meta property="og:description" content="前端应该知道的 web 登录为什么会有登录这回事首先这是因为 HTTP 是无状态的协议。所谓无状态就是在两次请求之间服务器不会保存任何的数据。所以，登录就是用某种方法让服务器在多次请求之间能够识别出你，而不是每次发请求都得带上用户名密码这样的识别身份的信息。从登录成功到登出的这个过程，服务器一直维护了一个可以识别出用户信息的数据结构，广义上来说，这个过程就叫做 session，也就是保持了一个会话">
+<meta property="og:description" content="为什么会有登录这回事首先这是因为 HTTP 是无状态的协议。所谓无状态就是在两次请求之间服务器不会保存任何的数据。所以，登录就是用某种方法让服务器在多次请求之间能够识别出你，而不是每次发请求都得带上用户名密码这样的识别身份的信息。从登录成功到登出的这个过程，服务器一直维护了一个可以识别出用户信息的数据结构，广义上来说，这个过程就叫做 session，也就是保持了一个会话。 常见的两种登录服务器 s">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://jack-cool.github.io/images/session.png">
-<meta property="og:updated_time" content="2019-08-27T13:25:16.078Z">
+<meta property="og:image" content="https://jack-cool.github.io/images/jwt.png">
+<meta property="og:image" content="https://jack-cool.github.io/images/jwtType.jpg">
+<meta property="og:updated_time" content="2019-08-27T13:32:44.881Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="前端应该晓得的web登录">
-<meta name="twitter:description" content="前端应该知道的 web 登录为什么会有登录这回事首先这是因为 HTTP 是无状态的协议。所谓无状态就是在两次请求之间服务器不会保存任何的数据。所以，登录就是用某种方法让服务器在多次请求之间能够识别出你，而不是每次发请求都得带上用户名密码这样的识别身份的信息。从登录成功到登出的这个过程，服务器一直维护了一个可以识别出用户信息的数据结构，广义上来说，这个过程就叫做 session，也就是保持了一个会话">
+<meta name="twitter:description" content="为什么会有登录这回事首先这是因为 HTTP 是无状态的协议。所谓无状态就是在两次请求之间服务器不会保存任何的数据。所以，登录就是用某种方法让服务器在多次请求之间能够识别出你，而不是每次发请求都得带上用户名密码这样的识别身份的信息。从登录成功到登出的这个过程，服务器一直维护了一个可以识别出用户信息的数据结构，广义上来说，这个过程就叫做 session，也就是保持了一个会话。 常见的两种登录服务器 s">
 <meta name="twitter:image" content="https://jack-cool.github.io/images/session.png">
 
 
@@ -370,7 +372,7 @@
       
 
       
-        <h2 id="前端应该知道的-web-登录"><a href="#前端应该知道的-web-登录" class="headerlink" title="前端应该知道的 web 登录"></a>前端应该知道的 web 登录</h2><h3 id="为什么会有登录这回事"><a href="#为什么会有登录这回事" class="headerlink" title="为什么会有登录这回事"></a>为什么会有登录这回事</h3><p>首先这是因为 HTTP 是无状态的协议。所谓无状态就是在两次请求之间服务器不会保存任何的数据。所以，登录就是用某种方法让服务器在多次请求之间能够识别出你，而不是每次发请求都得带上用户名密码这样的识别身份的信息。从登录成功到登出的这个过程，服务器一直维护了一个可以识别出用户信息的数据结构，广义上来说，这个过程就叫做 session，也就是保持了一个会话</p>
+        <h3 id="为什么会有登录这回事"><a href="#为什么会有登录这回事" class="headerlink" title="为什么会有登录这回事"></a>为什么会有登录这回事</h3><p>首先这是因为 HTTP 是无状态的协议。所谓无状态就是在两次请求之间服务器不会保存任何的数据。所以，登录就是用某种方法让服务器在多次请求之间能够识别出你，而不是每次发请求都得带上用户名密码这样的识别身份的信息。从登录成功到登出的这个过程，服务器一直维护了一个可以识别出用户信息的数据结构，广义上来说，这个过程就叫做 session，也就是保持了一个会话。</p>
 <h3 id="常见的两种登录"><a href="#常见的两种登录" class="headerlink" title="常见的两种登录"></a>常见的两种登录</h3><h4 id="服务器-session-客户端-sessionId"><a href="#服务器-session-客户端-sessionId" class="headerlink" title="服务器 session + 客户端 sessionId"></a>服务器 session + 客户端 sessionId</h4><!-- 图片 -->
 <p><img src="/images/session.png" alt="alt"></p>
 <ul>
@@ -383,8 +385,7 @@
 <p>前面说到 sessionId 方式的本质是把用户信息维护在 serve 端，token 方式就是把用户的状态信息加密成一串 token 传给前端，然后每次发请求时把 token 带上，传回给服务端。服务端收到请求之后，解析 token 并且验证相关信息</p>
 </blockquote>
 <p>token 也称作令牌，由 uid+time+sign+固定参数。</p>
-<p>token 的认证方式类似于临时的证书签名，并且是一种服务端无状态的认证方式，非常适合于 REST API 的场景。所谓无状态就是服务端并不会保存身份认证相关的数据。</p>
-<p>组成:</p>
+<p>token 的认证方式类似于临时的证书签名，并且是一种服务端无状态的认证方式，非常适合于 REST API 的场景。所谓无状态就是服务端并不会保存身份认证相关的数据。<br><a id="more"></a><br>组成:</p>
 <ul>
 <li>uid: 用户唯一身份标识</li>
 <li>time: 当前时间的时间戳</li>
@@ -405,6 +406,7 @@
 <p>服务器就不保存任何 session 数据了，也就是说，服务器变成无状态了，从而比较容易实现扩展。</p>
 <p>JWT 的格式大致如下:</p>
 <!-- 图片 -->
+<p><img src="/images/jwt.png" alt="alt"></p>
 <p>它是一个很长的字符串，中间用点（.）分隔成三个部分。</p>
 <p>JWT 的三个部分依次如下:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Header(头部)</span><br><span class="line">Payload(负载)</span><br><span class="line">Signature(签名)</span><br></pre></td></tr></table></figure>
@@ -432,6 +434,7 @@
 <p>算出签名以后，把 Header、Payload、Signature 三个部分拼成一个字符串，每个部分之间用”点”（.）分隔，就可以返回给用户。即最终的 jwt 为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jwt = base64url(header) + &quot;.&quot; + base64url(payload) + &quot;.&quot; + signature</span><br></pre></td></tr></table></figure>
 <!-- 图片 -->
+<p><img src="/images/jwtType.jpg" alt="alt"></p>
 <p>jwt 可以放在 response 中返回，也可以放在 cookie 中返回，这都是具体的返回方式，并不重要。<br>客户端发起请求时，官方推荐放在 HTTP header 中：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Authorization: Bearer &lt;token&gt;</span><br></pre></td></tr></table></figure>
 
@@ -679,7 +682,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前端应该知道的-web-登录"><span class="nav-number">1.</span> <span class="nav-text">前端应该知道的 web 登录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么会有登录这回事"><span class="nav-number">1.1.</span> <span class="nav-text">为什么会有登录这回事</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见的两种登录"><span class="nav-number">1.2.</span> <span class="nav-text">常见的两种登录</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#服务器-session-客户端-sessionId"><span class="nav-number">1.2.1.</span> <span class="nav-text">服务器 session + 客户端 sessionId</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#token"><span class="nav-number">1.2.2.</span> <span class="nav-text">token</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#JWT"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">JWT</span></a></li></ol></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么会有登录这回事"><span class="nav-number">1.</span> <span class="nav-text">为什么会有登录这回事</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见的两种登录"><span class="nav-number">2.</span> <span class="nav-text">常见的两种登录</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#服务器-session-客户端-sessionId"><span class="nav-number">2.1.</span> <span class="nav-text">服务器 session + 客户端 sessionId</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#token"><span class="nav-number">2.2.</span> <span class="nav-text">token</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#JWT"><span class="nav-number">2.2.1.</span> <span class="nav-text">JWT</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>

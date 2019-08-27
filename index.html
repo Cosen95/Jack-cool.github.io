@@ -366,8 +366,7 @@
 
       
         
-          
-            <h2 id="前端应该知道的-web-登录"><a href="#前端应该知道的-web-登录" class="headerlink" title="前端应该知道的 web 登录"></a>前端应该知道的 web 登录</h2><h3 id="为什么会有登录这回事"><a href="#为什么会有登录这回事" class="headerlink" title="为什么会有登录这回事"></a>为什么会有登录这回事</h3><p>首先这是因为 HTTP 是无状态的协议。所谓无状态就是在两次请求之间服务器不会保存任何的数据。所以，登录就是用某种方法让服务器在多次请求之间能够识别出你，而不是每次发请求都得带上用户名密码这样的识别身份的信息。从登录成功到登出的这个过程，服务器一直维护了一个可以识别出用户信息的数据结构，广义上来说，这个过程就叫做 session，也就是保持了一个会话</p>
+          <h3 id="为什么会有登录这回事"><a href="#为什么会有登录这回事" class="headerlink" title="为什么会有登录这回事"></a>为什么会有登录这回事</h3><p>首先这是因为 HTTP 是无状态的协议。所谓无状态就是在两次请求之间服务器不会保存任何的数据。所以，登录就是用某种方法让服务器在多次请求之间能够识别出你，而不是每次发请求都得带上用户名密码这样的识别身份的信息。从登录成功到登出的这个过程，服务器一直维护了一个可以识别出用户信息的数据结构，广义上来说，这个过程就叫做 session，也就是保持了一个会话。</p>
 <h3 id="常见的两种登录"><a href="#常见的两种登录" class="headerlink" title="常见的两种登录"></a>常见的两种登录</h3><h4 id="服务器-session-客户端-sessionId"><a href="#服务器-session-客户端-sessionId" class="headerlink" title="服务器 session + 客户端 sessionId"></a>服务器 session + 客户端 sessionId</h4><!-- 图片 -->
 <p><img src="/images/session.png" alt="alt"></p>
 <ul>
@@ -380,62 +379,17 @@
 <p>前面说到 sessionId 方式的本质是把用户信息维护在 serve 端，token 方式就是把用户的状态信息加密成一串 token 传给前端，然后每次发请求时把 token 带上，传回给服务端。服务端收到请求之后，解析 token 并且验证相关信息</p>
 </blockquote>
 <p>token 也称作令牌，由 uid+time+sign+固定参数。</p>
-<p>token 的认证方式类似于临时的证书签名，并且是一种服务端无状态的认证方式，非常适合于 REST API 的场景。所谓无状态就是服务端并不会保存身份认证相关的数据。</p>
-<p>组成:</p>
-<ul>
-<li>uid: 用户唯一身份标识</li>
-<li>time: 当前时间的时间戳</li>
-<li>sign: 签名，使用 hash/encrypt 压缩成定长的十六进制字符串，以防止第三方恶意拼接</li>
-<li>固定参数（可选）: 将一些常用的固定参数加入到 token 中是为了避免重复查库</li>
-</ul>
-<p>认证流程:</p>
-<ul>
-<li>用户登录，成功后服务器返回 Token 给客户端</li>
-<li>客户端收到数据后保存在客户端</li>
-<li>客户端再次访问服务器，将 token 放入 headers 中</li>
-<li>服务器端采用 filter 过滤器校验。检验成功后则返回请求数据，校验失败则返回错误码</li>
-</ul>
-<p>业界通用的加密方式是<code>jwt（json web token）</code></p>
-<h5 id="JWT"><a href="#JWT" class="headerlink" title="JWT"></a>JWT</h5><p>JWT 的原理是，服务器认证以后，生成一个 JSON 对象，发回给用户，就像下面这样:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;姓名&quot;: &quot;张三&quot;,</span><br><span class="line">  &quot;角色&quot;: &quot;管理员&quot;,</span><br><span class="line">  &quot;到期时间&quot;: &quot;2019年8月27日0点0分&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>以后，用户与服务端通信的时候，都要发回这个 JSON 对象。服务器完全只靠这个对象认证用户身份。为了防止用户篡改数据，服务器在生成这个对象的时候，会加上签名。</p>
-<p>服务器就不保存任何 session 数据了，也就是说，服务器变成无状态了，从而比较容易实现扩展。</p>
-<p>JWT 的格式大致如下:</p>
-<!-- 图片 -->
-<p>它是一个很长的字符串，中间用点（.）分隔成三个部分。</p>
-<p>JWT 的三个部分依次如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Header(头部)</span><br><span class="line">Payload(负载)</span><br><span class="line">Signature(签名)</span><br></pre></td></tr></table></figure>
-<p>下面简单介绍一下这三部分:</p>
-<ul>
-<li>Header</li>
-</ul>
-<p>Header 部分是一个 JSON 对象，描述 JWT 的元数据。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;alg&quot;: &quot;HS256&quot;,</span><br><span class="line">  &quot;typ&quot;: &quot;JWT&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面代码中，<code>alg</code>属性表示签名的算法，默认是 HMAC SHA256（写成 HS256）；<code>typ</code>属性表示这个令牌（token）的类型（type），JWT 令牌统一写为<code>JWT</code>。</p>
-<p>最后，将上面的 JSON 对象使用<code>Base64URL</code>算法转成字符串。</p>
-<ul>
-<li>Payload</li>
-</ul>
-<p>Payload 部分也是一个 JSON 对象，里面放的是用户的信息，用来存放实际需要传递的数据。JWT 规定了 7 个官方字段，供选用。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">iss (issuer)：签发人</span><br><span class="line">exp (expiration time)：过期时间</span><br><span class="line">sub (subject)：主题</span><br><span class="line">aud (audience)：受众</span><br><span class="line">nbf (Not Before)：生效时间</span><br><span class="line">iat (Issued At)：签发时间</span><br><span class="line">jti (JWT ID)：编号</span><br></pre></td></tr></table></figure>
-<p>注意，JWT 默认是不加密的，任何人都可以读到，所以不要把秘密信息放在这个部分。</p>
-<p>这个 JSON 对象也要使用<code>Base64URL</code>算法转成字符串。</p>
-<ul>
-<li>Signature</li>
-</ul>
-<p>Signature 部分是对前两部分的签名，防止数据篡改。</p>
-<p>首先，需要指定一个密钥（secret）。这个密钥只有服务器才知道，不能泄露给用户。然后，使用 Header 里面指定的签名算法（默认是 HMAC SHA256），按照下面的公式产生签名。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HMACSHA256(</span><br><span class="line">  base64UrlEncode(header) + &quot;.&quot; +</span><br><span class="line">  base64UrlEncode(payload),</span><br><span class="line">  secret)</span><br></pre></td></tr></table></figure>
-<p>算出签名以后，把 Header、Payload、Signature 三个部分拼成一个字符串，每个部分之间用”点”（.）分隔，就可以返回给用户。即最终的 jwt 为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jwt = base64url(header) + &quot;.&quot; + base64url(payload) + &quot;.&quot; + signature</span><br></pre></td></tr></table></figure>
-<!-- 图片 -->
-<p>jwt 可以放在 response 中返回，也可以放在 cookie 中返回，这都是具体的返回方式，并不重要。<br>客户端发起请求时，官方推荐放在 HTTP header 中：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Authorization: Bearer &lt;token&gt;</span><br></pre></td></tr></table></figure>
-
-          
+<p>token 的认证方式类似于临时的证书签名，并且是一种服务端无状态的认证方式，非常适合于 REST API 的场景。所谓无状态就是服务端并不会保存身份认证相关的数据。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/08/27/前端应该晓得的web登录/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
-    </div>
+    </p></div>
     
     
     
@@ -571,8 +525,7 @@
 
       
         
-          
-            <!-- Hooks与React生命周期的关系 -->
+          <!-- Hooks与React生命周期的关系 -->
 <p>React 生命周期很多人都了解，但通常我们所了解的都是 单个组件 的生命周期，但针对 Hooks 组件、多个关联组件（父子组件和兄弟组件） 的生命周期又是怎么样的喃？你有思考和了解过吗，接下来我们将完整的了解 React 生命周期。</p>
 <h2 id="Hooks-组件"><a href="#Hooks-组件" class="headerlink" title="Hooks 组件"></a>Hooks 组件</h2><p><code>函数组件</code>的本质是函数，没有 state 的概念的，因此不存在生命周期一说，仅仅是一个 render 函数而已。</p>
 <p>但是引入<code>Hooks</code><br>之后就变得不同了，它能让组件在不使用 class 的情况下拥有 state，所以就有了生命周期的概念</p>
@@ -582,97 +535,17 @@
 <li>constructor<br>函数组件不需要构造函数，我们可以通过调用<code>useState</code>来初始化 state</li>
 <li>getDerivedStateFromProps<br>一般情况下，我们不需要使用它，我们可以在<code>渲染过程中更新state</code>，以达到实现 getDerivedStateFromProps 的目的</li>
 <li>shouldComponentUpdate<br>可以用<code>React.memo</code>包裹一个组件对它的 props 进行浅比较<br><code>const Comp = React.memeo((props) =&gt; { // 具体的组件 })</code><br>注意： React.memo 等价于 PureComponent，它只浅比较 props，这里也可以使用 useMemo 优化每一个节点</li>
-<li><p>render<br>这是函数组件体本身</p>
-</li>
-<li><p>componentDidMount<br>可以使用<code>useEffect</code>处理副作用<br><code>useEffect(() =&gt; { // 在componentDidMount执行的内容 }, [count]) // 仅在count更改时更新</code></p>
-</li>
-<li><p>componentWillUnmount<br>相当于 useEffect 里面返回的 cleanup 函数<br><code>useEffect(() =&gt; { // 需要在componentDidMount执行的内容 return function cleanup() { // 需要在componentWillUnmount执行的内容 } })</code></p>
-</li>
-<li><p>componentDidCatch &amp;&amp; getDerivedStateFromError<br>目前还没有这些方法的 Hook 等价写法</p>
-</li>
-</ul>
-<p>大致汇总成表格如下：</p>
-<table>
-<thead>
-<tr>
-<th>class 组件</th>
-<th style="text-align:left">Hooks 组件</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>constructor</td>
-<td style="text-align:left">useState</td>
-</tr>
-<tr>
-<td>getDerivedStateFromProps</td>
-<td style="text-align:left">useState 里面 update 函数</td>
-</tr>
-<tr>
-<td>shouldComponentUpdate</td>
-<td style="text-align:left">useMemo</td>
-</tr>
-<tr>
-<td>render</td>
-<td style="text-align:left">函数本身</td>
-</tr>
-<tr>
-<td>componentDidMount</td>
-<td style="text-align:left">useEffect</td>
-</tr>
-<tr>
-<td>componentDidUpdate</td>
-<td style="text-align:left">useEffect</td>
-</tr>
-<tr>
-<td>componentWillUnmount</td>
-<td style="text-align:left">useEffect 里面返回的函数</td>
-</tr>
-<tr>
-<td>componentDidCatch</td>
-<td style="text-align:left">无</td>
-</tr>
-<tr>
-<td>getDerivedStateFromError</td>
-<td style="text-align:left">无</td>
-</tr>
-</tbody>
-</table>
-<h2 id="单个组件的生命周期"><a href="#单个组件的生命周期" class="headerlink" title="单个组件的生命周期"></a>单个组件的生命周期</h2><p>组件的生命周期可以分为三个阶段:</p>
-<ul>
-<li>挂载阶段</li>
-<li>组件更新阶段</li>
-<li>挂载阶段</li>
-</ul>
-<h3 id="v16-3-之前"><a href="#v16-3-之前" class="headerlink" title="v16.3 之前"></a>v16.3 之前</h3><ul>
-<li>挂载阶段 - constructor - componentWillMount - render: react 最重要的步骤，创建虚拟 dom，进行 diff 算法，更新 dom 树都在此进行 - componentDidMount</li>
-<li>组件更新阶段 - componentWillReceiveProps - shouldComponentUpdate - componentWillUpdate - render - componentDidUpdate</li>
-<li>卸载阶段 - componentWillUnmount</li>
-</ul>
-<p>这种生命周期会存在一个问题，那就是当更新复杂组件的最上层组件时，调用栈会很长，如果再进行复杂的操作，就可能长时间阻塞主线程，带来不好的用户体验。</p>
-<p>所以 v16.3 引入了新的 API 来解决这个问题</p>
-<h3 id="v16-3-之后"><a href="#v16-3-之后" class="headerlink" title="v16.3 之后"></a>v16.3 之后</h3><ul>
-<li><code>static getDerivedStateFromProps</code>: 该函数在挂载阶段和组件更新阶段都会执行，即每次获取新的 props 或 state 之后都会被执行，在挂载阶段用来代替 componentWillMount；在组件更新阶段配合 componentDidUpdate，可以覆盖 componentWillReceiveProps 的所有用法。</li>
-</ul>
-<p>同时它是一个静态函数，所以函数体内不能访问 this，会根据 nextProps 和 prevState 计算出预期的状态改变，返回结果会被送给 setState，返回 null 则说明不需要更新 state，并且这个返回是必须的。</p>
-<ul>
-<li><code>getSnapshotBeforeUpdate</code>: 该函数会在 render 之后，DOM 更新前被调用，用于读取最新的 DOM 数据。</li>
-</ul>
-<p>返回一个值，作为 componentDidUpdate 的第三个参数。配合 componentDidUpdate，可以覆盖 componentWillUpdate 的所有用法。</p>
-<p>即更新后的生命周期为：</p>
-<ul>
-<li><p>挂载阶段 - constructor - static getDerivedStateFromProps - render - componentDidMount</p>
-</li>
-<li><p>更新阶段 - static getDerivedStateFromProps - shouldComponentUpdate - render - getSnapshotBeforeUpdate - componentDidUpdate</p>
-</li>
-<li><p>卸载阶段 - componentWillUnmount</p>
-</li>
-</ul>
-
-          
+<li>render<br>这是函数组件体本身
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/08/24/Hooks与React生命周期的关系/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
-    </div>
+    </li></ul></div>
     
     
     
