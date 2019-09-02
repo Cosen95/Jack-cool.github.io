@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-corner-indicator.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="google-site-verification" content="lS4BlYURuselFfvPZtIo2YR88KM1hi8OSAW7-1Is-mQ">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-cat.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-cat.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="缓存,浏览器,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="跟着流年去旅行的个人博客" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="都 9102 年了，你还不懂浏览器的缓存机制？没错，我之前对这块是相当的薄弱，也逐渐在开发中感受到了缓存的作用。缓存可以说是性能优化中简单高效的一种优化方式了。一个优秀的缓存策略可以缩短网页请求资源的距离，减少延迟，并且由于缓存文件可以重复利用，还可以减少带宽，降低网络负荷。 既然缓存这么强，你还有什么理由不去深入了解一下呢？ Let’s got it!  缓存位置从缓存位置上来说分为四种，并且各">
+<meta name="keywords" content="缓存,浏览器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解浏览器的缓存机制">
+<meta property="og:url" content="https://jack-cool.github.io/2019/09/02/深入理解浏览器的缓存机制/index.html">
+<meta property="og:site_name" content="跟着流年去旅行的个人博客">
+<meta property="og:description" content="都 9102 年了，你还不懂浏览器的缓存机制？没错，我之前对这块是相当的薄弱，也逐渐在开发中感受到了缓存的作用。缓存可以说是性能优化中简单高效的一种优化方式了。一个优秀的缓存策略可以缩短网页请求资源的距离，减少延迟，并且由于缓存文件可以重复利用，还可以减少带宽，降低网络负荷。 既然缓存这么强，你还有什么理由不去深入了解一下呢？ Let’s got it!  缓存位置从缓存位置上来说分为四种，并且各">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://jack-cool.github.io/images/mindMapping.png">
+<meta property="og:image" content="https://jack-cool.github.io/images/cacheProcess.png">
+<meta property="og:image" content="https://jack-cool.github.io/images/cacheControl.png">
+<meta property="og:image" content="https://jack-cool.github.io/images/processMap.png">
+<meta property="og:image" content="https://jack-cool.github.io/images/effective.png">
+<meta property="og:image" content="https://jack-cool.github.io/images/invalid.png">
+<meta property="og:image" content="https://jack-cool.github.io/images/lastModified.png">
+<meta property="og:image" content="https://jack-cool.github.io/images/eTag.png">
+<meta property="og:image" content="https://jack-cool.github.io/images/mechanism.png">
+<meta property="og:updated_time" content="2019-09-02T14:26:12.398Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入理解浏览器的缓存机制">
+<meta name="twitter:description" content="都 9102 年了，你还不懂浏览器的缓存机制？没错，我之前对这块是相当的薄弱，也逐渐在开发中感受到了缓存的作用。缓存可以说是性能优化中简单高效的一种优化方式了。一个优秀的缓存策略可以缩短网页请求资源的距离，减少延迟，并且由于缓存文件可以重复利用，还可以减少带宽，降低网络负荷。 既然缓存这么强，你还有什么理由不去深入了解一下呢？ Let’s got it!  缓存位置从缓存位置上来说分为四种，并且各">
+<meta name="twitter:image" content="https://jack-cool.github.io/images/mindMapping.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jack-cool.github.io/2019/09/02/深入理解浏览器的缓存机制/">
+
+
+
+
+
+  <title>深入理解浏览器的缓存机制 | 跟着流年去旅行的个人博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <a href="https://github.com/Jack-cool" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">跟着流年去旅行的个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jack-cool.github.io/2019/09/02/深入理解浏览器的缓存机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="feng shuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/github.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="跟着流年去旅行的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">深入理解浏览器的缓存机制</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-02T22:08:47+08:00">
+                2019-09-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/浏览器/" itemprop="url" rel="index">
+                    <span itemprop="name">浏览器</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>都 9102 年了，你还不懂浏览器的缓存机制？没错，我之前对这块是相当的薄弱，也逐渐在开发中感受到了缓存的作用。缓存可以说是性能优化中简单高效的一种优化方式了。一个优秀的缓存策略可以缩短网页请求资源的距离，减少延迟，并且由于缓存文件可以重复利用，还可以减少带宽，降低网络负荷。</p>
+<p>既然缓存这么强，你还有什么理由不去深入了解一下呢？</p>
+<p>Let’s got it!</p>
+<p><img src="/images/mindMapping.png" alt="alt"></p>
+<h2 id="缓存位置"><a href="#缓存位置" class="headerlink" title="缓存位置"></a>缓存位置</h2><p>从缓存位置上来说分为四种，并且各自有优先级，当依次查找缓存且都没有命中的时候，才会去请求网络。</p>
+<ul>
+<li>Service Worker</li>
+<li>Memory Cache</li>
+<li>Disk Cache</li>
+<li>Push Cache</li>
+</ul>
+<a id="more"></a>
+<h3 id="Service-Worker"><a href="#Service-Worker" class="headerlink" title="Service Worker"></a>Service Worker</h3><p>Service Worker 是运行在浏览器背后的独立线程，一般可以用来实现缓存功能。使用 Service Worker 的话，传输协议必须为 HTTPS。因为 Service Worker 中涉及到请求拦截，所以必须使用 HTTPS 协议来保障安全。</p>
+<h3 id="Memory-Cache"><a href="#Memory-Cache" class="headerlink" title="Memory Cache"></a>Memory Cache</h3><p>Memory Cache 也就是内存中的缓存，主要包含的是当前页面中已经抓取到的资源，例如页面上已经下载的样式、脚本、图片等。读取内存中的数据肯定比磁盘快，内存缓存虽然读取高效，可是缓存持续性很短，会随着进程的释放而释放（一旦我们关闭 Tab 页面，内存中的缓存也就被释放了）。</p>
+<p>内存缓存中有一块重要的缓存资源是 preloader 相关指令（例如<code>&lt;link rel=&quot;prefetch&quot;&gt;</code>）众所周知 preloader 的相关指令已经是页面优化的常见手段之一，它可以一边解析 js/css 文件，一边网络请求下一个资源。</p>
+<h3 id="Disk-Cache"><a href="#Disk-Cache" class="headerlink" title="Disk Cache"></a>Disk Cache</h3><p>Disk Cache 也就是存储在硬盘中的缓存，读取速度虽然慢点，但是什么都能存储到磁盘中，与 Memory Cache 相比，优势是容量和存储时效性。</p>
+<p>在所有浏览器缓存中，Disk Cache 覆盖面基本上是最大的。它会根据 HTTP Header 中的字段判断哪些资源缓存（不用慌，关于 HTTP 的协议头中的缓存字段，会在下面详细介绍的），哪些资源可以不请求直接使用，哪些资源已经过期需要重新请求。并且即使在跨站点的情况下，相同地址的资源一旦被硬盘缓存下来，就不会再次去请求数据。绝大部分的缓存都来自 Disk Cache。</p>
+<blockquote>
+<p>浏览器会把哪些文件丢进内存中？哪些丢进硬盘中？</p>
+</blockquote>
+<p>关于这点，网上说法不一，不过以下两点比较靠得住：</p>
+<ul>
+<li>对于大文件来说，大概率是不存储在内存中的</li>
+<li>当前系统内存使用率高的话，文件优先存进硬盘</li>
+</ul>
+<h3 id="Push-Cache"><a href="#Push-Cache" class="headerlink" title="Push Cache"></a>Push Cache</h3><p>Push Cache（推送缓存）是 HTTP/2 中的内容，当以上三种缓存都没有命中时，它才会被使用。它只在会话（Session）中存在，一旦会话结束就被释放，并且缓存时间也很短暂。</p>
+<p>如果以上四种缓存都没有命中的话，那么只能发起请求来获取资源了。</p>
+<p>为了性能上的考虑，大部分的接口都应该选择好缓存策略，通常浏览器缓存策略分为两种：强缓存和协商缓存，并且缓存策略都是通过设置 HTTP Header 来实现的。</p>
+<h2 id="缓存过程分析"><a href="#缓存过程分析" class="headerlink" title="缓存过程分析"></a>缓存过程分析</h2><p>浏览器与服务器通信的方式为应答模式，即： 浏览器发起 HTTP 请求 &gt;&gt; 服务器响应该请求，那么浏览器怎么确定一个资源该不该缓存，如何去缓存呢？浏览器第一次向服务器发起该请求后拿到请求结果后，将请求结果和缓存标识存入浏览器缓存，浏览器对于缓存的处理是根据第一次请求资源时返回的响应头来确定的。具体过程如下图：</p>
+ <!-- 图片 -->
+<p><img src="/images/cacheProcess.png" alt="alt"></p>
+<p>由上图我们可以知道：</p>
+<ul>
+<li>浏览器每次发起请求，都会先在浏览器缓存中查找该请求的结果以及缓存标识。</li>
+<li>浏览器每次拿到返回的请求结果都会将该结果和缓存标识存入浏览器缓存中。</li>
+</ul>
+<p>以上两点是浏览器缓存机制的关键，它确保了每个请求的缓存存入与读取。下面说一下浏览器缓存的使用规则。根据是否需要向服务器重新发起 HTTP 请求将缓存过程分为两个部分，分别是强缓存和协商缓存。</p>
+<h2 id="强缓存"><a href="#强缓存" class="headerlink" title="强缓存"></a>强缓存</h2><p>强缓存： 不会向服务器发起请求，直接从缓存中读取资源，在 chrome 控制台的 Network 选项中可以看到该请求返回 200 的状态码，并且<code>size显示from disk cache</code>或<code>from memory cache</code>。强缓存可以通过设置两种 HTTP Header 实现： Expires 和 Cache-Control</p>
+<p>1、 Expires</p>
+<p>缓存过期时间，用来指定资源到期的时间，是服务端的具体时间点。也就是说，Expires=max-age + 请求时间，需要和 Last-modified 结合使用。Expires 是 Web 服务器响应消息头字段，在响应 http 请求时告诉浏览器在过期时间前浏览器可以直接从浏览器缓存取数据，而无需再次请求。</p>
+<p>Expires 是 HTTP/1 的产物，受限于本地时间，如果修改了本地时间，可能会造成缓存失效。</p>
+<p>2、 Cache-Control</p>
+<p>在 HTTP/1.1 中，Cache-Control 是最重要的规则，主要用于控制网页缓存。</p>
+<p>Cache-Control 可以在请求头或者响应头中设置，并且可以组合使用多种指令：</p>
+<!-- 图片 -->
+<p><img src="/images/cacheControl.png" alt="alt"></p>
+<ul>
+<li><p><code>public</code>: 所有内容都将被缓存（客户端和代理服务器都可缓存）。具体来说响应可被任何中间节点缓存，如 Browser &lt;– proxy1 &lt;– proxy2 &lt;– Server，中间的 proxy 可以缓存资源，下次再请求同一资源，proxy1 直接把自己缓存的东西给 Browser 而不再向 proxy2 要。</p>
+</li>
+<li><p><code>private</code>: 所有内容只有客户端可以缓存，Cache-Control 的默认取值。具体来说，表示中间节点不允许缓存，对于 Browser &lt;– proxy1 &lt;– proxy2 &lt;– Server，proxy 会老老实实把 Server 返回的数据发送给 proxy1，自己不缓存任何数据。当下次 Browser 再次请求时 proxy 会做好请求转发而不是自作主张给自己缓存的数据</p>
+</li>
+<li><p><code>no-cache</code>: 客户端缓存内容，是否使用缓存则需要经过协商缓存来验证决定。表示不使用 Cache-Control 的缓存控制方式来做前置验证，而是使用 Etag 或者 Last-Modified 字段来控制缓存。需要注意的是，no-cache 这个名字有点误导。设置了 no-cache 之后，并不是说浏览器就不再缓存数据，而是浏览器在使用缓存数据时，需要先确认一下数据是否还跟服务器保持一致。</p>
+</li>
+<li><p><code>no-store</code>: 所有内容都不会被缓存，即不使用强缓存，也不使用协商缓存</p>
+</li>
+<li><p><code>max-age</code>: max-age=xxx(xxx is numeric)表示缓存内容将在 xxx 秒后失效</p>
+</li>
+<li><p><code>s-maxage</code>: 同 max-age 作用一样，只在代理服务器中生效。max-age 用于普通缓存，而 s-maxage 用于代理缓存。s-maxage 的优先级高于 max-age。如果存在 s-maxage，则会覆盖掉 max-age 和 Expires header</p>
+</li>
+<li><p><code>max-stale</code>: 能容忍的最大过期时间。max-stale 指令标识了客户端愿意接受一个已经过期了的响应。如果指定了 max-stale 的值，则最大容忍时间为对应的秒数。如果没有指定，那么说明浏览器愿意接收任何 age 的响应（age 表示响应由源站生成或确认的时间与当前时间的差值）。</p>
+</li>
+<li><p><code>min-fresh</code>: 能够容忍的最小新鲜度。min-fresh 标识了客户端不愿意接受新鲜度不多于当前的 age 加上 min-fresh 设定的时间之和的响应</p>
+</li>
+</ul>
+<!-- 图片 -->
+<p><img src="/images/processMap.png" alt="alt"></p>
+<p>3、 Expires 和 Cache-Control 两者对比</p>
+<p>其实这两者差别不大，区别就在于 Expires 是 http1.0 的产物，Cache-Control 是 http1.1 的产物，两者同时存在的话，Cache-Control 优先级高于 Expires；在某些不支持 HTTP1.1 的环境下，Expires 就会发挥用处。所以 Expires 其实是过时的产物，现阶段它的存在只是一种兼容性的写法。</p>
+<p>强缓存判断是否缓存的依据来自于是否超出某个时间或者某个时间段，而不关心服务器端文件是否已经更新，这可能会导致加载文件不是服务器端最新的内容，那我们如何获知服务器端内容是否已经发生了更新呢？此时我们需要用到协商缓存策略。</p>
+<h2 id="协商缓存"><a href="#协商缓存" class="headerlink" title="协商缓存"></a>协商缓存</h2><p>协商缓存就是强制缓存失效后，浏览器携带缓存标识向服务器发起请求，由服务器根据缓存标识决定是否使用缓存的过程，主要有以下两种情况：</p>
+<ul>
+<li>协商缓存生效，返回 304 和 Not Modified</li>
+</ul>
+<!-- 图片 -->
+<p><img src="/images/effective.png" alt="alt"></p>
+<ul>
+<li>协商缓存成功，返回 200 和请求结果</li>
+</ul>
+<!-- 图片 -->
+<p><img src="/images/invalid.png" alt="alt"></p>
+<p>协商缓存可以通过设置两种 HTTP Header 实现： Last-Modified 和 ETag</p>
+<p>1、 Last-Modified 和 If-Modified-Since</p>
+<p>浏览器在第一次访问资源时，服务器返回资源的同时，在 response header 中添加 Last-Modified 的 header，值是这个资源在服务器上的最后修改时间，浏览器接收后缓存文件和 header：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Last-Modified: Mon, 02 Sep 2019 18:10:00 GMT</span><br></pre></td></tr></table></figure>
+<p>浏览器下一次请求这个资源，浏览器检测到有 Last-Modified 这个 header，于是添加 If-Modified-Since 这个 header，值就是 Last-Modified 中的值；服务器再次收到这个资源请求，会根据 If-Modified-Since 中的值与服务器中这个资源的最后修改时间对比，如果没有变化，返回 304 和空的响应体，直接从缓存读取，如果 If-Modified-Since 的时间小于服务器中这个资源的最后修改时间，说明文件有更新，于是返回新的资源文件和 200。</p>
+<!-- 图片 -->
+<p><img src="/images/lastModified.png" alt="alt"></p>
+<p>但是 Last-Modified 存在一些弊端：</p>
+<ul>
+<li><p>如果本地打开缓存文件，即使没有对文件进行修改，但还是会造成 Last-Modified 被修改，服务端不能命中缓存导致发送相同的资源;</p>
+</li>
+<li><p>因为 Last-Modified 只能以秒计时，如果在不可感知的时间内修改完成文件，那么服务端会认为资源还是命中了，不会返回正确的资源。</p>
+</li>
+</ul>
+<p>既然根据文件修改时间来决定是否缓存尚有不足，能否可以直接根据文件内容是否修改来决定缓存策略？所以在 HTTP / 1.1 出现了 ETag 和 If-None-Match。</p>
+<p>2、 ETag 和 If-None-Match</p>
+<p>Etag 是服务器响应请求时，返回当前资源文件的一个唯一标识 (由服务器生成)，只要资源有变化，Etag 就会重新生成。浏览器在下一次加载资源向服务器发送请求时，会将上一次返回的 Etag 值放到 request header 里的 If-None-Match 里，服务器只需要比较客户端传来的 If-None-Match 跟自己服务器上该资源的 ETag 是否一致，就能很好地判断资源相对客户端而言是否被修改过了。如果服务器发现 ETag 匹配不上，那么直接以常规 GET 200 回包形式将新的资源（当然也包括了新的 ETag）发给客户端；如果 ETag 是一致的，则直接返回 304 知会客户端直接使用本地缓存即可。</p>
+<!-- 图片 -->
+<p><img src="/images/eTag.png" alt="alt"></p>
+<p>3、 两者之间对比</p>
+<ul>
+<li><p>首先在精确度上，Etag 要优于 Last-Modifie，Last-Modified 的时间单位是秒，如果某个文件在 1 秒内改变了多次，那么他们的 Last-Modified 其实并没有体现出来修改，但是 Etag 每次都会改变确保了精度；如果是负载均衡的服务器，各个服务器生成的 Last-Modified 也有可能不一致;</p>
+</li>
+<li><p>第二在性能上，Etag 要逊于 Last-Modified，毕竟 Last-Modified 只需要记录时间，而 Etag 需要服务器通过算法来计算出一个 hash 值;</p>
+</li>
+<li><p>第三在优先级上，服务器校验优先考虑 Etag。</p>
+</li>
+</ul>
+<h2 id="缓存机制"><a href="#缓存机制" class="headerlink" title="缓存机制"></a>缓存机制</h2><p>强制缓存优先于协商缓存进行，若强制缓存 (Expires 和 Cache-Control) 生效则直接使用缓存，若不生效则进行协商缓存 (Last-Modified / If-Modified-Since 和 Etag / If-None-Match)，协商缓存由服务器决定是否使用缓存，若协商缓存失效，那么代表该请求的缓存失效，返回 200，重新返回资源和缓存标识，再存入浏览器缓存中；生效则返回 304，继续使用缓存。具体流程图如下：</p>
+<!-- 图片 -->
+<p><img src="/images/mechanism.png" alt="alt"></p>
+<p>看到这里，不知道你是否存在这样一个疑问:如果什么缓存策略都没设置，那么浏览器会怎么处理？</p>
+<p>对于这种情况，浏览器会采用一个启发式的算法，通常会取响应头中的 Date 减去 Last-Modified 值的 10% 作为缓存时间。</p>
+<h2 id="实际场景应用缓存策略"><a href="#实际场景应用缓存策略" class="headerlink" title="实际场景应用缓存策略"></a>实际场景应用缓存策略</h2><ul>
+<li>频繁变动的资源</li>
+</ul>
+<p>对于频繁变动的资源，首先需要使用 Cache-Control: no-cache 使浏览器每次都请求服务器，然后配合 ETag 或者 Last-Modified 来验证资源是否有效。这样的做法虽然不能节省请求数量，但是能显著减少响应数据大小。</p>
+<ul>
+<li>不常变化的资源</li>
+</ul>
+<p>通常在处理这类资源时，给它们的 Cache-Control 配置一个很大的 max-age=31536000 (一年)，这样浏览器之后请求相同的 URL 会命中强制缓存。而为了解决更新的问题，就需要在文件名 (或者路径) 中添加 hash， 版本号等动态字符，之后更改动态字符，从而达到更改引用 URL 的目的，让之前的强制缓存失效 (其实并未立即失效，只是不再使用了而已)。</p>
+<h2 id="用户行为对浏览器缓存的影响"><a href="#用户行为对浏览器缓存的影响" class="headerlink" title="用户行为对浏览器缓存的影响"></a>用户行为对浏览器缓存的影响</h2><p>所谓用户行为对浏览器缓存的影响，指的就是用户在浏览器如何操作时，会触发怎样的缓存策略。主要有 3 种：</p>
+<ul>
+<li><p>打开网页，地址栏输入地址： 查找 disk cache 中是否有匹配。如有则使用；如没有则发送网络请求；</p>
+</li>
+<li><p>普通刷新 (F5)：因为 TAB 并没有关闭，因此 memory cache 是可用的，会被优先使用 (如果匹配的话)。其次才是 disk cache；</p>
+</li>
+<li><p>强制刷新 (Ctrl + F5)：浏览器不使用缓存，因此发送的请求头部均带有 Cache-control: no-cache(为了兼容，还带了 Pragma: no-cache), 服务器直接返回 200 和最新内容。</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="feng shuan 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="feng shuan 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/缓存/" rel="tag"><i class="fa fa-tag"></i> 缓存</a>
+          
+            <a href="/tags/浏览器/" rel="tag"><i class="fa fa-tag"></i> 浏览器</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/27/前端应该晓得的web登录/" rel="next" title="前端应该晓得的web登录">
+                <i class="fa fa-chevron-left"></i> 前端应该晓得的web登录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NTg0MS8yMjM1Mg=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/github.jpg" alt="feng shuan">
+            
+              <p class="site-author-name" itemprop="name">feng shuan</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Jack-cool" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="fengshuan95@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://segmentfault.com/u/fengshuan/articles" target="_blank" title="Segmentfault">
+                      
+                        <i class="fa fa-fw fa-stack-overflow"></i>Segmentfault</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://plus.google.com/fengshuan" target="_blank" title="Google">
+                      
+                        <i class="fa fa-fw fa-google"></i>Google</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存位置"><span class="nav-number">1.</span> <span class="nav-text">缓存位置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Service-Worker"><span class="nav-number">1.1.</span> <span class="nav-text">Service Worker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Memory-Cache"><span class="nav-number">1.2.</span> <span class="nav-text">Memory Cache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Disk-Cache"><span class="nav-number">1.3.</span> <span class="nav-text">Disk Cache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Push-Cache"><span class="nav-number">1.4.</span> <span class="nav-text">Push Cache</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存过程分析"><span class="nav-number">2.</span> <span class="nav-text">缓存过程分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#强缓存"><span class="nav-number">3.</span> <span class="nav-text">强缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#协商缓存"><span class="nav-number">4.</span> <span class="nav-text">协商缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存机制"><span class="nav-number">5.</span> <span class="nav-text">缓存机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实际场景应用缓存策略"><span class="nav-number">6.</span> <span class="nav-text">实际场景应用缓存策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用户行为对浏览器缓存的影响"><span class="nav-number">7.</span> <span class="nav-text">用户行为对浏览器缓存的影响</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">feng shuan</span>
+
+  
+</div>
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+-->
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共15.2k字</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas> 
+   <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script> 
+   <script type="text/javascript" src="/js/src/firework.js"></script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":145,"height":315},"mobile":{"show":true,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.8},"baidusitemap":{"path":"baidusitemap.xml"},"sitemap":{"path":"sitemap.xml"},"baidu_url_submit":{"count":5,"host":"jack-cool.github.io","token":"97IzNtcrVJekZxdO","path":"baidu_urls.txt"},"log":false});</script></body>
+</html>
