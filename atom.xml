@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://jack-cool.github.io/"/>
-  <updated>2019-09-02T14:26:12.398Z</updated>
+  <updated>2019-09-04T14:15:51.308Z</updated>
   <id>https://jack-cool.github.io/</id>
   
   <author>
@@ -15,6 +15,53 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>你应该知道的浏览器渲染原理</title>
+    <link href="https://jack-cool.github.io/2019/09/04/%E4%BD%A0%E5%BA%94%E8%AF%A5%E7%9F%A5%E9%81%93%E7%9A%84%E6%B5%8F%E8%A7%88%E5%99%A8%E6%B8%B2%E6%9F%93%E5%8E%9F%E7%90%86/"/>
+    <id>https://jack-cool.github.io/2019/09/04/你应该知道的浏览器渲染原理/</id>
+    <published>2019-09-04T13:59:36.000Z</published>
+    <updated>2019-09-04T14:15:51.308Z</updated>
+    
+    <content type="html"><![CDATA[<!-- 你应该知道的浏览器渲染原理 --><p>浏览器作为前端开发中必不可少的一项，在日常开发中扮演了重要的角色。不管你是画页面(咦，怎么有点切图仔的感觉)，还是用 Chrome Devtools 调试。但有时候仅仅会用，可能还不太够。</p><p>浏览器的内核是指支持浏览器运行的最核心的程序，分为两个部分，一是渲染引擎，另一个是 JS 引擎。</p><p>渲染引擎在不同的浏览器中也不都是相同的。目前市面上常见的浏览器内核可以分为这四种：</p><ul><li>Trident(IE)</li><li>Gecko(火狐)</li><li>Blink(Chrome、Opera)</li><li>Webkit(Safari)</li></ul><p>本文以 webkit 为例，大概阐述一下浏览器的渲染过程。</p><h2 id="页面加载过程"><a href="#页面加载过程" class="headerlink" title="页面加载过程"></a>页面加载过程</h2><p>在介绍浏览器渲染过程之前，我们先简单介绍下页面的加载过程，有助于更好理解后续渲染过程。</p><p>大概流程如下：</p><ul><li>浏览器根据 DNS 服务器得到域名的 IP 地址</li><li>向这个 IP 的机器发送 HTTP 请求</li><li>服务器收到、处理并返回 HTTP 请求</li><li>浏览器得到返回内容</li></ul><p>例如在浏览器输入<code>https://github.com/Jack-cool</code>，然后经过 DNS 解析，<code>github.com</code>对应的 IP 是<code>192.30.253.112</code>（不同时间、地点对应的 IP 可能会不同）。然后浏览器向该 IP 发送 HTTP 请求。</p><p>服务端接收到 HTTP 请求，然后经过计算（向不同的用户推送不同的内容），返回 HTTP 请求，返回的内容如下：</p><!-- 图片 --><p><img src="/images/response.png" alt="alt"></p><p>其实就是一堆 HMTL 格式的字符串，因为只有 HTML 格式浏览器才能正确解析，这是 W3C 标准的要求。接下来就是浏览器的渲染过程。</p><h2 id="浏览器渲染过程"><a href="#浏览器渲染过程" class="headerlink" title="浏览器渲染过程"></a>浏览器渲染过程</h2><!-- 图片 --><p><img src="/images/render.png" alt="alt"></p><a id="more"></a><p>浏览器渲染过程大体分为如下三部分：</p><ul><li><p>浏览器会解析三个东西：</p><ul><li><p>一是 HTML/SVG/XHTML，HTML 字符串描述了一个页面的结构，浏览器会把 HTML 结构字符串解析转换 DOM 树形结构。</p><!-- 图片 --><p><img src="/images/html.gif" alt="alt"></p></li><li><p>二是 CSS，解析 CSS 会产生 CSS 规则树，它和 DOM 结构比较像。</p><!-- 图片 --><p><img src="/images/css.png" alt="alt"></p></li></ul></li></ul><ul><li><p>三是 Javascript 脚本，等到 Javascript 脚本文件加载后， 通过 DOM API 和 CSSOM API 来操作 DOM Tree 和 CSS Rule Tree。</p><!-- 图片 --><p><img src="/images/script.gif" alt="alt"></p></li><li><p>解析完成后，浏览器引擎会通过 DOM Tree 和 CSS Rule Tree 来构造 Rendering Tree。</p><ul><li><p>Rendering Tree 渲染树并不等同于 DOM 树，渲染树只会包括需要显示的节点和这些节点的样式信息。</p></li><li><p>CSS 的 Rule Tree 主要是为了完成匹配并把 CSS Rule 附加上 Rendering Tree 上的每个 Element（也就是每个 Frame）。</p></li><li><p>然后，计算每个 Frame 的位置，这又叫 layout 和 reflow 过程。</p></li></ul></li><li><p>最后通过调用操作系统 Native GUI 的 API 绘制。</p></li></ul><h2 id="浏览器渲染过程细节"><a href="#浏览器渲染过程细节" class="headerlink" title="浏览器渲染过程细节"></a>浏览器渲染过程细节</h2><h3 id="构建-DOM"><a href="#构建-DOM" class="headerlink" title="构建 DOM"></a>构建 DOM</h3><p>浏览器会遵守一套步骤将 HTML 文件转换为 DOM 树。宏观上，可以分为几个步骤：</p><!-- 图片 --><p><img src="/images/dom.png" alt="alt"></p><h3 id="构建-CSSOM"><a href="#构建-CSSOM" class="headerlink" title="构建 CSSOM"></a>构建 CSSOM</h3><p>DOM 会捕获页面的内容，但浏览器还需要知道页面如何展示，所以需要构建 CSSOM。</p><p>构建 CSSOM 的过程与构建 DOM 的过程非常相似，当浏览器接收到一段 CSS，浏览器首先要做的是识别出 Token，然后构建节点并生成 CSSOM。</p><!-- 图片 --><p><img src="/images/cssom.png" alt="alt"></p><h3 id="构建渲染树"><a href="#构建渲染树" class="headerlink" title="构建渲染树"></a>构建渲染树</h3><p>当我们生成 DOM 树和 CSSOM 树以后，就需要将这两棵树组合为渲染树。</p><!-- 图片 --><p><img src="/images/renderTree.png" alt="alt"></p><p>在这一过程中，不是简单的将两者合并就行了。渲染树只会包括需要显示的节点和这些节点的样式信息。</p><p>我们或许有个疑惑：<code>浏览器如果渲染过程中遇到JS文件怎么处理</code>？</p><p>渲染过程中，如果遇到<code>&lt;script&gt;</code>就停止渲染，执行 JS 代码。因为浏览器有 GUI 渲染线程与 JS 引擎线程，为了防止渲染出现不可预期的结果，这两个线程是互斥的关系。JavaScript 的加载、解析与执行会阻塞 DOM 的构建，也就是说，在构建 DOM 时，HTML 解析器若遇到了 JavaScript，那么它会暂停构建 DOM，将控制权移交给 JavaScript 引擎，等 JavaScript 引擎运行完毕，浏览器再从中断的地方恢复 DOM 构建。</p><p>也就是说，如果你想首屏渲染的越快，就越不应该在首屏就加载 JS 文件，这也是都建议将 script 标签放在 body 标签底部的原因。当然在当下，并不是说 script 标签必须放在底部，因为你可以给 script 标签添加 defer 或者 async 属性。</p><p>JS 文件不只是阻塞 DOM 的构建，它会导致 CSSOM 也阻塞 DOM 的构建。</p><p>原本 DOM 和 CSSOM 的构建是互不影响，井水不犯河水，但是一旦引入了 JavaScript，CSSOM 也开始阻塞 DOM 的构建，只有 CSSOM 构建完毕后，DOM 再恢复 DOM 构建。</p><p>这是什么情况？</p><p>这是因为 JavaScript 不只是可以改 DOM，它还可以更改样式，也就是它可以更改 CSSOM。因为不完整的 CSSOM 是无法使用的，如果 JavaScript 想访问 CSSOM 并更改它，那么在执行 JavaScript 时，必须要能拿到完整的 CSSOM。所以就导致了一个现象，如果浏览器尚未完成 CSSOM 的下载和构建，而我们却想在此时运行脚本，那么浏览器将延迟脚本执行和 DOM 构建，直至其完成 CSSOM 的下载和构建。也就是说，<code>在这种情况下，浏览器会先下载和构建CSSOM，然后再执行JavaScript，最后在继续构建DOM</code>。</p><!-- 图片 --><p><img src="/images/block.png" alt="alt"></p><h3 id="布局与绘制"><a href="#布局与绘制" class="headerlink" title="布局与绘制"></a>布局与绘制</h3><p>当浏览器生成渲染树以后，就会根据渲染树来进行布局（也可以叫做回流）。这一阶段浏览器要做的事情是要弄清楚各个节点在页面中的确切位置和大小。通常这一行为也被称为“自动重排”。</p><p>布局流程的输出是一个“盒模型”，它会精确地捕获每个元素在视口内的确切位置和尺寸，所有相对测量值都将转换为屏幕上的绝对像素。</p><p>布局完成后，浏览器会立即发出“Paint Setup”和“Paint”事件，将渲染树转换成屏幕上的像素。</p><h3 id="性能优化策略"><a href="#性能优化策略" class="headerlink" title="性能优化策略"></a>性能优化策略</h3><p>基于上面介绍的浏览器渲染原理，DOM 和 CSSOM 结构构建顺序，初始化可以对页面渲染做些优化，提升页面性能。</p><ul><li><p>JS 优化： <code>&lt;script&gt;</code> 标签加上 defer 属性 和 async 属性 用于在不阻塞页面文档解析的前提下，控制脚本的下载和执行。</p><ul><li>defer 属性： 用于开启新的线程下载脚本文件，并使脚本在文档解析完成后执行。</li><li>async 属性： HTML5 新增属性，用于异步下载脚本文件，下载完毕立即解释执行代码。</li></ul></li><li><p>CSS 优化： <code>&lt;link&gt;</code> 标签的 rel 属性 中的属性值设置为 preload 能够让你在你的 HTML 页面中可以指明哪些资源是在页面加载完成后即刻需要的。</p></li></ul><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>综上所述，我们得出这样的结论：</p><ul><li>浏览器工作流程：构建 DOM -&gt; 构建 CSSOM -&gt; 构建渲染树 -&gt; 布局 -&gt; 绘制。</li><li>CSSOM 会阻塞渲染，只有当 CSSOM 构建完毕后才会进入下一个阶段构建渲染树。</li><li>通常情况下 DOM 和 CSSOM 是并行构建的，但是当浏览器遇到一个不带 defer 或 async 属性的 script 标签时，DOM 构建将暂停，如果此时又恰巧浏览器尚未完成 CSSOM 的下载和构建，由于 JavaScript 可以修改 CSSOM，所以需要等 CSSOM 构建完毕后再执行 JS，最后才重新 DOM 构建。</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;!-- 你应该知道的浏览器渲染原理 --&gt;
+&lt;p&gt;浏览器作为前端开发中必不可少的一项，在日常开发中扮演了重要的角色。不管你是画页面(咦，怎么有点切图仔的感觉)，还是用 Chrome Devtools 调试。但有时候仅仅会用，可能还不太够。&lt;/p&gt;
+&lt;p&gt;浏览器的内核是指支持浏览器运行的最核心的程序，分为两个部分，一是渲染引擎，另一个是 JS 引擎。&lt;/p&gt;
+&lt;p&gt;渲染引擎在不同的浏览器中也不都是相同的。目前市面上常见的浏览器内核可以分为这四种：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Trident(IE)&lt;/li&gt;
+&lt;li&gt;Gecko(火狐)&lt;/li&gt;
+&lt;li&gt;Blink(Chrome、Opera)&lt;/li&gt;
+&lt;li&gt;Webkit(Safari)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;本文以 webkit 为例，大概阐述一下浏览器的渲染过程。&lt;/p&gt;
+&lt;h2 id=&quot;页面加载过程&quot;&gt;&lt;a href=&quot;#页面加载过程&quot; class=&quot;headerlink&quot; title=&quot;页面加载过程&quot;&gt;&lt;/a&gt;页面加载过程&lt;/h2&gt;&lt;p&gt;在介绍浏览器渲染过程之前，我们先简单介绍下页面的加载过程，有助于更好理解后续渲染过程。&lt;/p&gt;
+&lt;p&gt;大概流程如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;浏览器根据 DNS 服务器得到域名的 IP 地址&lt;/li&gt;
+&lt;li&gt;向这个 IP 的机器发送 HTTP 请求&lt;/li&gt;
+&lt;li&gt;服务器收到、处理并返回 HTTP 请求&lt;/li&gt;
+&lt;li&gt;浏览器得到返回内容&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;例如在浏览器输入&lt;code&gt;https://github.com/Jack-cool&lt;/code&gt;，然后经过 DNS 解析，&lt;code&gt;github.com&lt;/code&gt;对应的 IP 是&lt;code&gt;192.30.253.112&lt;/code&gt;（不同时间、地点对应的 IP 可能会不同）。然后浏览器向该 IP 发送 HTTP 请求。&lt;/p&gt;
+&lt;p&gt;服务端接收到 HTTP 请求，然后经过计算（向不同的用户推送不同的内容），返回 HTTP 请求，返回的内容如下：&lt;/p&gt;
+&lt;!-- 图片 --&gt;
+&lt;p&gt;&lt;img src=&quot;/images/response.png&quot; alt=&quot;alt&quot;&gt;&lt;/p&gt;
+&lt;p&gt;其实就是一堆 HMTL 格式的字符串，因为只有 HTML 格式浏览器才能正确解析，这是 W3C 标准的要求。接下来就是浏览器的渲染过程。&lt;/p&gt;
+&lt;h2 id=&quot;浏览器渲染过程&quot;&gt;&lt;a href=&quot;#浏览器渲染过程&quot; class=&quot;headerlink&quot; title=&quot;浏览器渲染过程&quot;&gt;&lt;/a&gt;浏览器渲染过程&lt;/h2&gt;&lt;!-- 图片 --&gt;
+&lt;p&gt;&lt;img src=&quot;/images/render.png&quot; alt=&quot;alt&quot;&gt;&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="浏览器" scheme="https://jack-cool.github.io/categories/%E6%B5%8F%E8%A7%88%E5%99%A8/"/>
+    
+    
+      <category term="浏览器渲染" scheme="https://jack-cool.github.io/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%B8%B2%E6%9F%93/"/>
+    
+  </entry>
   
   <entry>
     <title>深入理解浏览器的缓存机制</title>

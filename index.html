@@ -274,6 +274,177 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jack-cool.github.io/2019/09/04/你应该知道的浏览器渲染原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="feng shuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/github.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="跟着流年去旅行的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/04/你应该知道的浏览器渲染原理/" itemprop="url">你应该知道的浏览器渲染原理</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-04T21:59:36+08:00">
+                2019-09-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/浏览器/" itemprop="url" rel="index">
+                    <span itemprop="name">浏览器</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <!-- 你应该知道的浏览器渲染原理 -->
+<p>浏览器作为前端开发中必不可少的一项，在日常开发中扮演了重要的角色。不管你是画页面(咦，怎么有点切图仔的感觉)，还是用 Chrome Devtools 调试。但有时候仅仅会用，可能还不太够。</p>
+<p>浏览器的内核是指支持浏览器运行的最核心的程序，分为两个部分，一是渲染引擎，另一个是 JS 引擎。</p>
+<p>渲染引擎在不同的浏览器中也不都是相同的。目前市面上常见的浏览器内核可以分为这四种：</p>
+<ul>
+<li>Trident(IE)</li>
+<li>Gecko(火狐)</li>
+<li>Blink(Chrome、Opera)</li>
+<li>Webkit(Safari)</li>
+</ul>
+<p>本文以 webkit 为例，大概阐述一下浏览器的渲染过程。</p>
+<h2 id="页面加载过程"><a href="#页面加载过程" class="headerlink" title="页面加载过程"></a>页面加载过程</h2><p>在介绍浏览器渲染过程之前，我们先简单介绍下页面的加载过程，有助于更好理解后续渲染过程。</p>
+<p>大概流程如下：</p>
+<ul>
+<li>浏览器根据 DNS 服务器得到域名的 IP 地址</li>
+<li>向这个 IP 的机器发送 HTTP 请求</li>
+<li>服务器收到、处理并返回 HTTP 请求</li>
+<li>浏览器得到返回内容</li>
+</ul>
+<p>例如在浏览器输入<code>https://github.com/Jack-cool</code>，然后经过 DNS 解析，<code>github.com</code>对应的 IP 是<code>192.30.253.112</code>（不同时间、地点对应的 IP 可能会不同）。然后浏览器向该 IP 发送 HTTP 请求。</p>
+<p>服务端接收到 HTTP 请求，然后经过计算（向不同的用户推送不同的内容），返回 HTTP 请求，返回的内容如下：</p>
+<!-- 图片 -->
+<p><img src="/images/response.png" alt="alt"></p>
+<p>其实就是一堆 HMTL 格式的字符串，因为只有 HTML 格式浏览器才能正确解析，这是 W3C 标准的要求。接下来就是浏览器的渲染过程。</p>
+<h2 id="浏览器渲染过程"><a href="#浏览器渲染过程" class="headerlink" title="浏览器渲染过程"></a>浏览器渲染过程</h2><!-- 图片 -->
+<p><img src="/images/render.png" alt="alt"></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/09/04/你应该知道的浏览器渲染原理/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jack-cool.github.io/2019/09/02/深入理解浏览器的缓存机制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -875,159 +1046,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jack-cool.github.io/2019/08/05/webpack4打造极致开发环境/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="feng shuan">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/github.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="跟着流年去旅行的个人博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/08/05/webpack4打造极致开发环境/" itemprop="url">webpack4打造极致开发环境</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-05T21:26:09+08:00">
-                2019-08-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/web工程化/" itemprop="url" rel="index">
-                    <span itemprop="name">web工程化</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>Webpack 是当下最热门的前端资源模块化管理和打包工具。它可以将许多松散的模块按照依赖和规则打包成符合生产环境部署的前端资源。还可以将按需加载的模块进行代码分隔，等到实际需要的时候再异步加载。通过 loader 的转换，任何形式的资源都可以视作模块，比如 CommonJs 模块、 AMD 模块、 ES6 模块、CSS、图片、 JSON、Coffeescript、 LESS 等。</p>
-<p>webpack 已经是大部分前端项目打包工具的首选，grunt、glup、browserify 等逐渐沦为辅助甚至完全被替代。在 grunt、glup、browserify 等已经相当火了之后，webpack 长江后浪推前浪，把前辈们拍死在沙滩上，实力惊人。</p>
-<p>本文主要从 webpack4.x 入手，会对平时常用的 Webpack 配置一一讲解，各个功能点都有对应的详细例子，所以本文也比较长，但如果你能动手跟着本文中的例子完整写一次，相信你会觉得 Webpack 也不过如此。</p>
-<h2 id="安装-webpack-的几种方式"><a href="#安装-webpack-的几种方式" class="headerlink" title="安装 webpack 的几种方式"></a>安装 webpack 的几种方式</h2><ul>
-<li><code>global</code>(全局):通过 <code>webpack index.js</code> 运行</li>
-<li><code>local</code>(项目维度安装):通过 <code>npx webpack index.js</code> 运行</li>
-</ul>
-<h2 id="知识点总结"><a href="#知识点总结" class="headerlink" title="知识点总结"></a>知识点总结</h2>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/08/05/webpack4打造极致开发环境/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1080,7 +1098,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1102,7 +1120,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -1199,7 +1217,7 @@
 -->
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共15.2k字</span>
+  <span class="post-count">博客全站共17.1k字</span>
 </div>
 
         
